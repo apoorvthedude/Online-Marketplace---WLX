@@ -1,0 +1,65 @@
+{% extends 'core/base.html' %}
+
+{%block title%} {{item.name}} {%endblock title%}
+
+{% block content %}
+
+    <div class = "grid grid-cols-5 gap-6">
+
+        <div class = "col-span-3">
+            <img src = "{{ item.image.url }}" class = "rounded-xl">
+        </div>
+
+        <div class = "col-span-2 p-6 bg-gray-100 rounded-xl">
+
+            <h1 class = "text-center mb-6 text-3xl">{{item.name}} </h1>
+
+            <p class = " text-gray-500 text-xl"><strong> Price : </strong> INR {{item.price}}</p>
+            
+            {% if item.description %}
+                <p class = "text-gray-700 text-2xl mt-5">
+                    <strong> Description : </strong> <br> {{item.description}}
+                </p>
+            {% endif %}
+
+            <p class = "text-2xl mt-10 text-gray-500"><strong> Seller : </strong> {{item.created_by.username}}</p>
+            
+            {% if request.user == item.created_by %}
+                <div class = "mt-6 p-6 bg-white rounded-xl">
+                    <p>This is your item!!</p>
+                    <a href = "{% url 'item:edit' item.id %}" class = "inline-block my-6 px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl">Edit</a>
+                    <a href = "{% url 'item:delete' item.id%}" class = "inline-block my-6 px-6 py-3 text-lg font-semibold bg-red-500 text-white rounded-xl">Delete</a>
+                </div>
+            {% else %}
+                <a href="#" class = "inline-block mt-6 px-6 py-3 text-lg font-semibold rounded-xl bg-teal-500 text-white hover:bg-teal-700"> Contact Seller
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class = "mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+        <h2 class="mb-12 text-2xl text-center">
+            Related items
+        </h2>
+
+        <div class="grid grid-cols-3 gap-3">
+                {% for item in related_items %}
+                    {% if category.items.count == 1 %} <!-- This is not working right now -->
+                        <p class="text-2xl text-white">There are no related items</p>
+                    {% else %}
+                        <div>
+                            <a href="{% url 'item:detail' item.id %}">
+                        <div>
+                            <img src = "{{ item.image.url }}" class = "rounded-t-xl hover:scale-105 transition-all duration-300">
+                        </div>
+                            <div class="p-6 bg-white rounded-b-xl">
+                            <h2 class="text-2xl">{{item.name}}</h2>
+                            <p class="text-gray-500">Price : {{item.price}}</p>
+                            </div>
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+{% endblock content %}
